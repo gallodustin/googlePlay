@@ -30,8 +30,7 @@ int main(void) {
 
     err = monetdb_query(conn,
                         "COPY INTO test FROM '/users/dgal/MonetDBLite-C/googlePlay/googleplaystore.csv' USING"
-                        "DELIMITERS ',','\"'", 1, NULL,
-                        NULL, NULL);
+                        "DELIMITERS ',','\\n','\"' ", 1, NULL, NULL, NULL);
     if (err != 0)
     error(err)
 
