@@ -30,7 +30,7 @@ int main(void) {
     error(err)
 
     err = monetdb_query(conn,
-                        "COPY INTO test FROM './googlePlay/googleplaystore.csv'", 1, NULL,
+                        "COPY INTO test FROM '/users/dgal/MonetDBLite-C/googlePlay/googleplaystore.csv'", 1, NULL,
                         NULL, NULL);
     if (err != 0)
     error(err)
