@@ -22,21 +22,20 @@ int main(void) {
     if (conn == NULL)
     error("Connection failed")
 
-    err = monetdb_query(conn, "CREATE TABLE test (app string, category string, rating string, reviews string, size string,"
-                              "installs string, type string, price string, contentR string, genres string, lastU string,"
-                              "curV string, andV string)", 1,
-                        NULL, NULL, NULL);
+    err = monetdb_query(conn, "CREATE TABLE test (app string, category string, rating string, reviews string, "
+                              "size string, installs string, type string, price string, contentR string, "
+                              "genres string, lastU string, curV string, andV string)", 1, NULL, NULL, NULL);
     if (err != 0)
     error(err)
 
     err = monetdb_query(conn,
-                        "COPY INTO test FROM '/users/dgal/MonetDBLite-C/googlePlay/googleplaystore.csv'", 1, NULL,
+                        "COPY INTO test FROM '/users/dgal/MonetDBLite-C/googlePlay/googleplaystore.csv' USING"
+                        "DELIMITERS ',','\"'", 1, NULL,
                         NULL, NULL);
     if (err != 0)
     error(err)
 
-    err = monetdb_query(conn, "SELECT * FROM test WHERE app = 'Coloring book moana'; ", 1, &result, NULL,
-                        NULL);
+    err = monetdb_query(conn, "SELECT * FROM test WHERE app = 'Coloring book moana'; ", 1, &result, NULL, NULL);
     if (err != 0)
     error(err)
 
