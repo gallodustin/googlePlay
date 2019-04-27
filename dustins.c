@@ -2,15 +2,21 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define error(msg) {fprintf(stderr, "Failure: %s\n", msg); return -1;}
 
-void* editRow(void* conn) {
+void* editRow(void* var) {
 
     char* err;
+    void* conn;
 
-    err = monetdb_query((char*)conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
+    conn = monetdb_connect();
+    err = monetdb_query(conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
                         1, NULL, NULL, NULL);
+    monetdb_disconnect(conn);
+
+
     if (err != 0) {
         return conn;
     }
@@ -19,6 +25,11 @@ void* editRow(void* conn) {
 }
 
 int main(int argc, char *argv[]) {
+
+    if (argc != 2) {
+        printf("usage: ./dustins <numthreads>\n");
+        return 0;
+    }
 
     int numthreads = atoi(argv[1]);
 
@@ -57,19 +68,32 @@ int main(int argc, char *argv[]) {
     //
 
     pthread_t id[numthreads];
-    int i,rc;
+    int i, rc;
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
 
     for (i = 0; i < numthreads; i++) {
         rc = pthread_create(&id[i], NULL, &editRow, conn);
         if (rc != 0) {
-            printf("Thread creation failed.");
-            return 0;
+            error("Thread creation failed.");
         }
     }
 
     for (i = 0; i < numthreads; i++) {
         pthread_join(id[i], NULL);
     }
+
+    end = clock();
+
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    printf("Total time used: %fs\n", cpu_time_used);
+
+    //
+    // print some result to prove the row was updated
+    //
 
     err = monetdb_query(conn, "SELECT * FROM test WHERE app = 'Coloring book moana';", 1, &result, NULL, NULL);
     if (err != 0) {
