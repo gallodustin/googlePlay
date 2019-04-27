@@ -12,10 +12,10 @@ void* editRow(void* conn) {
     err = monetdb_query((char*)conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
                         1, NULL, NULL, NULL);
     if (err != 0) {
-        return (void*)err;
+        return conn;
     }
 
-    return (void*)err;
+    return conn;
 }
 
 int main(int argc, char *argv[]) {
