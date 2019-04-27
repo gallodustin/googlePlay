@@ -4,11 +4,11 @@
 
 #define error(msg) {fprintf(stderr, "Failure: %s\n", msg); return -1;}
 
-int editRow(char* conn) {
+void* editRow(void* conn) {
 
     char* err;
 
-    err = monetdb_query(conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
+    err = monetdb_query((char*)conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
                         1, NULL, NULL, NULL);
     if (err != 0) {
         error(err)
@@ -19,7 +19,7 @@ int editRow(char* conn) {
 
 int main(int argc, char *argv[]) {
 
-    int numthreads = argv[1];
+    int numthreads = atoi(argv[1]);
 
     char* err = 0;
     void* conn = 0;
