@@ -4,6 +4,19 @@
 
 #define error(msg) {fprintf(stderr, "Failure: %s\n", msg); return -1;}
 
+int editRow(char* conn) {
+
+    char* err;
+
+    err = monetdb_query(conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
+                        1, NULL, NULL, NULL);
+    if (err != 0) {
+        error(err)
+    }
+
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
 
     int numthreads = argv[1];
@@ -100,19 +113,6 @@ int main(int argc, char *argv[]) {
     monetdb_cleanup_result(conn, result);
     monetdb_disconnect(conn);
     monetdb_shutdown();
-
-    return 0;
-}
-
-int editRow(char* conn) {
-
-    char* err;
-
-    err = monetdb_query(conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
-            1, NULL, NULL, NULL);
-    if (err != 0) {
-        error(err)
-    }
 
     return 0;
 }
