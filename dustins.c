@@ -1,6 +1,7 @@
 #include "embedded.h"
 #include <stdio.h>
 #include <pthread.h>
+#include <stdlib.h>
 
 #define error(msg) {fprintf(stderr, "Failure: %s\n", msg); return -1;}
 
@@ -11,10 +12,10 @@ void* editRow(void* conn) {
     err = monetdb_query((char*)conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
                         1, NULL, NULL, NULL);
     if (err != 0) {
-        error(err)
+        return (void*)err;
     }
 
-    return 0;
+    return (void*)err;
 }
 
 int main(int argc, char *argv[]) {
