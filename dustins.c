@@ -12,7 +12,7 @@ void* editRow(void* var) {
     void* conn;
 
     conn = monetdb_connect();
-    err = monetdb_query(conn, "UPDATE test SET category = 'newval' WHERE app = 'Coloring book moana';",
+    err = monetdb_query(conn, "UPDATE test SET category = 'newval';",
                         1, NULL, NULL, NULL);
     monetdb_disconnect(conn);
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         error(err)
     }
 
-    err = monetdb_query(conn, "COPY 100 RECORDS INTO test FROM '/users/dgal/googlePlay/googleplaystore.csv'"
+    err = monetdb_query(conn, "COPY 10000 RECORDS INTO test FROM '/users/dgal/googlePlay/googleplaystore.csv'"
                               "USING DELIMITERS ',','\\n','\"' NULL AS '';", 1, NULL, NULL, NULL);
     if (err != 0) {
         error(err)
